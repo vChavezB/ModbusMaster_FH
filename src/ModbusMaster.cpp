@@ -63,6 +63,9 @@ void ModbusMaster::begin(uint8_t slave, Stream &serial)
 //  txBuffer = (uint16_t*) calloc(ku8MaxBufferSize, sizeof(uint16_t));
   _u8MBSlave = slave;
   _serial = &serial;
+#ifdef ESP_PLATFORM
+	esp32Uartno=(uint8_t *)_serial==(uint8_t *)&Serial?1:(uint8_t *)_serial==(uint8_t *)&Serial2?2:3;
+#endif
   _u8TransmitBufferIndex = 0;
   u16TransmitBufferLength = 0;
   
@@ -78,6 +81,20 @@ void ModbusMaster::beginTransmission(uint16_t u16Address)
   _u16WriteAddress = u16Address;
   _u8TransmitBufferIndex = 0;
   u16TransmitBufferLength = 0;
+}
+//Set Serial Baud rate to communicate with specific Modbus slave
+void ModbusMaster::setBaudRate(unsigned long baudRate)
+{
+	((HardwareSerial *)_serial)->begin(baudRate);
+}
+
+void ModbusMaster::enableModbusDebug(bool enable)
+{
+	modbusDebug=enable;
+	if(modbusDebug)
+		Serial.begin(115200);
+	else
+		Serial.end();
 }
 
 // eliminate this function in favor of using existing MB request functions
@@ -700,7 +717,11 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
   u8ModbusADU[u8ModbusADUSize++] = lowByte(u16CRC);
   u8ModbusADU[u8ModbusADUSize++] = highByte(u16CRC);
   u8ModbusADU[u8ModbusADUSize] = 0;
-
+  if(modbusDebug)
+  {
+	modbusTXsize_debug=u8ModbusADUSize;
+	memcpy(modbusTX_debug,u8ModbusADU,u8ModbusADUSize);
+  }
   // flush receive buffer before transmitting request
   while (_serial->read() != -1);
 
@@ -716,11 +737,13 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
   
   u8ModbusADUSize = 0;
   _serial->flush();    // flush transmit buffer
+#ifdef ESP_PLATFORM
+	uart_tx_wait_idle(esp32Uartno); //Wait until ESP32 sends last tx frame
+ #endif
   if (_postTransmission)
   {
     _postTransmission();
   }
-  
   // loop until we run out of time or bytes, or an error occurs
   u32StartTime = millis();
   while (u8BytesLeft && !u8MBStatus)
@@ -802,6 +825,10 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
       u8MBStatus = ku8MBResponseTimedOut;
     }
   }
+  if(modbusDebug){
+	modbusRXsize_debug=u8ModbusADUSize;
+	memcpy(modbusRX_debug,u8ModbusADU,modbusRXsize_debug);
+  }
   
   // verify response is large enough to inspect further
   if (!u8MBStatus && u8ModbusADUSize >= 5)
@@ -868,7 +895,27 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
         break;
     }
   }
-  
+	if(modbusDebug)
+	{
+		Serial.print("[Modbus_Debug] Sent: ");
+		for(int i=0;i<modbusTXsize_debug;i++)
+		{ 	Serial.print("0x");
+			if(modbusTX_debug[i]<0x0F)
+				Serial.print("0");
+			Serial.print(modbusTX_debug[i],HEX);
+			Serial.print(" ");
+		}
+		Serial.println();
+		Serial.print("[Modbus_Debug] Recieved: ");
+		for(int i=0;i<modbusRXsize_debug;i++)
+		{ 	Serial.print("0x");
+			if(modbusRX_debug[i]<0x0F)
+				Serial.print("0");
+			Serial.print(modbusRX_debug[i],HEX);
+			Serial.print(" ");
+		}
+		Serial.println();
+	}
   _u8TransmitBufferIndex = 0;
   u16TransmitBufferLength = 0;
   _u8ResponseBufferIndex = 0;

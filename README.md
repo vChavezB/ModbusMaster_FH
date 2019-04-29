@@ -1,17 +1,23 @@
 # ModbusMaster
 [![GitHub release](https://img.shields.io/github/release/4-20ma/ModbusMaster.svg?maxAge=3600)][GitHub release]
-[![Travis](https://img.shields.io/travis/4-20ma/ModbusMaster.svg?maxAge=3600)][Travis]
-[![license](https://img.shields.io/github/license/4-20ma/ModbusMaster.svg?maxAge=3600)][license]
-[![code of conduct](https://img.shields.io/badge/%E2%9D%A4-code%20of%20conduct-blue.svg?maxAge=3600)][code of conduct]
 
-[GitHub release]:   https://github.com/4-20ma/ModbusMaster
-[Travis]:           https://travis-ci.org/4-20ma/ModbusMaster
-[license]:          LICENSE
-[code of conduct]:  CODE_OF_CONDUCT.md
+
+[GitHub release]:   https://github.com/vChavezB/ModbusMaster_FH
 
 
 ## Overview
 This is an Arduino library for communicating with Modbus slaves over RS232/485 (via RTU protocol).
+
+
+Based on https://github.com/4-20ma/ModbusMaster
+
+
+Modified for Arduino Lab Sessions and projects at FH Aachen
+
+
+  - Debug option (Mirror RX,TX on Serial of Arduino Uno)
+  - Change baud rate
+  - ESP32 implementation
 
 
 ## Features

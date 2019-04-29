@@ -60,7 +60,10 @@ Set to 1 to enable debugging features within class:
 // functions to manipulate words
 #include "util/word.h"
 
-
+#ifdef ESP_PLATFORM
+//ESP32 direct uart manipulation
+#include "rom/uart.h" //for uart
+#endif
 /* _____CLASS DEFINITIONS____________________________________________________ */
 /**
 Arduino class library for communicating with Modbus slaves over 
@@ -72,6 +75,8 @@ class ModbusMaster
     ModbusMaster();
    
     void begin(uint8_t, Stream &serial);
+	void setBaudRate(unsigned long baudRate);
+	void enableModbusDebug(bool enable);
     void idle(void (*)());
     void preTransmission(void (*)());
     void postTransmission(void (*)());
@@ -216,9 +221,16 @@ class ModbusMaster
     uint8_t  maskWriteRegister(uint16_t, uint16_t, uint16_t);
     uint8_t  readWriteMultipleRegisters(uint16_t, uint16_t, uint16_t, uint16_t);
     uint8_t  readWriteMultipleRegisters(uint16_t, uint16_t);
-    
   private:
+	bool modbusDebug	= false;
+	uint8_t modbusTX_debug[256];								//Buffer for sent UART data over Modbus
+	uint8_t modbusRX_debug[256]; 								//Buffer for recieved UART data over Modbus
+	uint8_t modbusTXsize_debug;
+	uint8_t modbusRXsize_debug;
     Stream* _serial;                                             ///< reference to serial port object
+#ifdef ESP_PLATFORM
+	uint8_t esp32Uartno;										///Identify which Uart interface has been selected
+#endif
     uint8_t  _u8MBSlave;                                         ///< Modbus slave (1..255) initialized in begin()
     static const uint8_t ku8MaxBufferSize                = 64;   ///< size of response/transmit buffers    
     uint16_t _u16ReadAddress;                                    ///< slave register from which to read
