@@ -82,11 +82,7 @@ void ModbusMaster::beginTransmission(uint16_t u16Address)
   _u8TransmitBufferIndex = 0;
   u16TransmitBufferLength = 0;
 }
-//Set Serial Baud rate to communicate with specific Modbus slave
-void ModbusMaster::setBaudRate(unsigned long baudRate)
-{
-	((HardwareSerial *)_serial)->begin(baudRate);
-}
+
 
 void ModbusMaster::enableModbusDebug(bool enable)
 {

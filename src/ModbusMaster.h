@@ -64,6 +64,8 @@ Set to 1 to enable debugging features within class:
 //ESP32 direct uart manipulation
 #include "rom/uart.h" //for uart
 #endif
+#include <SoftwareSerial.h>
+
 /* _____CLASS DEFINITIONS____________________________________________________ */
 /**
 Arduino class library for communicating with Modbus slaves over 
@@ -75,7 +77,6 @@ class ModbusMaster
     ModbusMaster();
    
     void begin(uint8_t, Stream &serial);
-	void setBaudRate(unsigned long baudRate);
 	void enableModbusDebug(bool enable);
     void idle(void (*)());
     void preTransmission(void (*)());
@@ -221,6 +222,7 @@ class ModbusMaster
     uint8_t  maskWriteRegister(uint16_t, uint16_t, uint16_t);
     uint8_t  readWriteMultipleRegisters(uint16_t, uint16_t, uint16_t, uint16_t);
     uint8_t  readWriteMultipleRegisters(uint16_t, uint16_t);
+
   private:
 	bool modbusDebug	= false;
 	uint8_t modbusTX_debug[256];								//Buffer for sent UART data over Modbus
