@@ -35,7 +35,7 @@
 */
 #define MAX485_DE      3
 #define MAX485_RE_NEG  2
-
+#define MODBUS_TIMEOUT 27 //Timeout of Modbus response in ms
 // instantiate ModbusMaster object
 ModbusMaster node;
 
@@ -67,6 +67,7 @@ void setup()
   // Callbacks allow us to configure the RS485 transceiver correctly
   node.preTransmission(preTransmission);
   node.postTransmission(postTransmission);
+  node.setTimeout(MODBUS_TIMEOUT);
 }
 
 bool state = true;
@@ -81,16 +82,16 @@ void loop()
   state = !state;
 
   // Read 16 registers starting at 0x3100)
-  result = node.readInputRegisters(0x3100, 16);
+  result = node.readInputRegisters(0x3100, 16); //Read 16 Registers starting from Input register address 0x3100 
   if (result == node.ku8MBSuccess)
   {
     Serial.print("Vbatt: ");
-    Serial.println(node.getResponseBuffer(0x04)/100.0f);
+    Serial.println(node.getResponseBuffer(0x04)/100.0f); //Get response from device from byte number 0x04 with starting offset of address 0x3100 
     Serial.print("Vload: ");
-    Serial.println(node.getResponseBuffer(0xC0)/100.0f);
+    Serial.println(node.getResponseBuffer(0xC0)/100.0f); //Get response from device from byte number 0xC0 with starting offset of address 0x3100 
     Serial.print("Pload: ");
-    Serial.println((node.getResponseBuffer(0x0D) +
-                    node.getResponseBuffer(0x0E) << 16)/100.0f);
+    Serial.println((node.getResponseBuffer(0x0D) +		 //Get response from device from byte number 0x0D with starting offset of address 0x3100 
+                    node.getResponseBuffer(0x0E) << 16)/100.0f); //Get response from device from byte number 0x0E with starting offset of address 0x3100 
   }
 
   delay(1000);

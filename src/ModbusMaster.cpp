@@ -87,10 +87,18 @@ void ModbusMaster::beginTransmission(uint16_t u16Address)
 void ModbusMaster::enableModbusDebug(bool enable)
 {
 	modbusDebug=enable;
+#ifndef IOLINK
 	if(modbusDebug)
 		Serial.begin(115200);
 	else
 		Serial.end();
+#endif
+}
+//Set timeout for modbusresponse
+void ModbusMaster::setTimeout(uint16_t timeout_ms) 
+{
+	ku16MBResponseTimeout = timeout_ms;
+
 }
 
 // eliminate this function in favor of using existing MB request functions
@@ -891,6 +899,7 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
         break;
     }
   }
+#ifndef IOLINK
 	if(modbusDebug)
 	{
 		Serial.print("[Modbus_Debug] Sent: ");
@@ -912,6 +921,7 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
 		}
 		Serial.println();
 	}
+#endif
   _u8TransmitBufferIndex = 0;
   u16TransmitBufferLength = 0;
   _u8ResponseBufferIndex = 0;

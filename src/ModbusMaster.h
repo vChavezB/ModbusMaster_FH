@@ -34,7 +34,7 @@ Arduino library for communicating with Modbus slaves over RS232/485 (via RTU pro
   
 #ifndef ModbusMaster_h
 #define ModbusMaster_h
-
+#define IOLINK //Comment when not using IOLINK
 
 /**
 @def __MODBUSMASTER_DEBUG__ (0)
@@ -64,7 +64,7 @@ Set to 1 to enable debugging features within class:
 //ESP32 direct uart manipulation
 #include "rom/uart.h" //for uart
 #endif
-#include <SoftwareSerial.h>
+
 
 /* _____CLASS DEFINITIONS____________________________________________________ */
 /**
@@ -81,7 +81,7 @@ class ModbusMaster
     void idle(void (*)());
     void preTransmission(void (*)());
     void postTransmission(void (*)());
-
+	void setTimeout(uint16_t timeout_ms);
     // Modbus exception codes
     /**
     Modbus protocol illegal function exception.
@@ -263,7 +263,7 @@ class ModbusMaster
     static const uint8_t ku8MBReadWriteMultipleRegisters = 0x17; ///< Modbus function 0x17 Read Write Multiple Registers
     
     // Modbus timeout [milliseconds]
-    static const uint16_t ku16MBResponseTimeout          = 2000; ///< Modbus timeout [milliseconds]
+    uint16_t ku16MBResponseTimeout          = 2000; ///< Modbus timeout [milliseconds]
     
     // master function that conducts Modbus transactions
     uint8_t ModbusMasterTransaction(uint8_t u8MBFunction);
