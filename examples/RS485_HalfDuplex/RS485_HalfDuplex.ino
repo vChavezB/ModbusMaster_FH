@@ -76,20 +76,19 @@ void loop()
 {
   uint8_t modbusOperation_status;
   uint16_t data[6];
-  
+
 
   // Read 16 registers starting at 0x3100)
 
-  modbusOperation_status = node.readInputRegisters(0x3100, 16); //Read 16 Registers starting from Input register address 0x3100 
-  if (modbusOperation_status == node.ku8MBSuccess){ //If modbusOperation_status == 0, got Data succesfully from Modbus Device
-	float batteryVoltage = node.getResponseBuffer(0x04)/100.0f; //Get data from modbus device from register 0x04 with starting offset of address 0x3100 
-	float VoltageLoad    = node.getResponseBuffer(0xC0)/100.0f //Get data from modbus device from register 0xC0 with starting offset of address 0x3100 
+  modbusOperation_status = node.readInputRegisters(0x3100, 16); //Read 16 Registers starting from Input register address 0x3100
+  if (modbusOperation_status == node.ku8MBSuccess) { //If modbusOperation_status == 0, got Data succesfully from Modbus Device
+    float batteryVoltage = node.getResponseBuffer(0x04) / 100.0f; //Get data from modbus device from register 0x04 with starting offset of address 0x3100
+    float VoltageLoad    = node.getResponseBuffer(0xC0) / 100.0f; //Get data from modbus device from register 0xC0 with starting offset of address 0x3100
     Serial.print("Vbatt: ");
-    Serial.println(batteryVoltage); 
+    Serial.println(batteryVoltage);
     Serial.print("Vload: ");
-    Serial.println(VoltageLoad); 
+    Serial.println(VoltageLoad);
   }
 
   delay(1000);
 }
-
