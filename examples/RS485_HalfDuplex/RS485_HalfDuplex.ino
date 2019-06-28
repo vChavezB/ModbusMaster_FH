@@ -79,29 +79,15 @@ void loop()
   
 
   // Read 16 registers starting at 0x3100)
-<<<<<<< HEAD
+
   modbusOperation_status = node.readInputRegisters(0x3100, 16); //Read 16 Registers starting from Input register address 0x3100 
-  if (modbusOperation_status == node.ku8MBSuccess) //If modbusOperation_status == 0, got Data succesfully from Modbus Device
-=======
-  result = node.readInputRegisters(0x3100, 16); //Read 16 Registers starting from Input register address 0x3100 
-  if (result == node.ku8MBSuccess)
->>>>>>> 0c36142af7575fc914fa158636818805f44f15f2
-  {
+  if (modbusOperation_status == node.ku8MBSuccess){ //If modbusOperation_status == 0, got Data succesfully from Modbus Device
 	float batteryVoltage = node.getResponseBuffer(0x04)/100.0f; //Get data from modbus device from register 0x04 with starting offset of address 0x3100 
 	float VoltageLoad    = node.getResponseBuffer(0xC0)/100.0f //Get data from modbus device from register 0xC0 with starting offset of address 0x3100 
     Serial.print("Vbatt: ");
-<<<<<<< HEAD
     Serial.println(batteryVoltage); 
     Serial.print("Vload: ");
     Serial.println(VoltageLoad); 
-=======
-    Serial.println(node.getResponseBuffer(0x04)/100.0f); //Get response from device from byte number 0x04 with starting offset of address 0x3100 
-    Serial.print("Vload: ");
-    Serial.println(node.getResponseBuffer(0xC0)/100.0f); //Get response from device from byte number 0xC0 with starting offset of address 0x3100 
-    Serial.print("Pload: ");
-    Serial.println((node.getResponseBuffer(0x0D) +		 //Get response from device from byte number 0x0D with starting offset of address 0x3100 
-                    node.getResponseBuffer(0x0E) << 16)/100.0f); //Get response from device from byte number 0x0E with starting offset of address 0x3100 
->>>>>>> 0c36142af7575fc914fa158636818805f44f15f2
   }
 
   delay(1000);
