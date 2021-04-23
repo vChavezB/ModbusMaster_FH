@@ -35,7 +35,7 @@
 */
 #define MAX485_DE      3
 #define MAX485_RE_NEG  2
-#define MODBUS_TIMEOUT 27 //Timeout of Modbus response in ms
+#define MODBUS_TIMEOUT 30 //Timeout of Modbus response in ms
 // instantiate ModbusMaster object
 ModbusMaster node;
 
