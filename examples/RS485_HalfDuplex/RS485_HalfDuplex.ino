@@ -33,9 +33,9 @@
   Rx/Tx is hooked up to the hardware serial port at 'Serial'.
   The Data Enable and Receiver Enable pins are hooked up as follows:
 */
-#define MAX485_DE      3
-#define MAX485_RE_NEG  2
-#define MODBUS_TIMEOUT 30 //Timeout of Modbus response in ms
+unsigned constexpr MAX485_DE = 3;
+unsigned constexpr MAX485_RE_NEG = 2;
+unsigned constexpr MODBUS_TIMEOUT = 30; //Timeout of Modbus response in ms
 // instantiate ModbusMaster object
 ModbusMaster node;
 
@@ -75,8 +75,6 @@ void setup()
 void loop()
 {
   uint8_t modbusOperation_status;
-  uint16_t data[6];
-
 
   // Read 16 registers starting at 0x3100)
 
