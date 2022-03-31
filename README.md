@@ -18,11 +18,7 @@ Modified for Arduino Lab Sessions and projects at FH Aachen
   - Debug option (Mirror RX,TX on Serial of Arduino Uno)
   - Change baud rate
   - ESP32 implementation
-<<<<<<< HEAD
   - Added timeout option for Modbus response
-=======
->>>>>>> 0c36142af7575fc914fa158636818805f44f15f2
-
 
 ## Features
 The following Modbus functions are available:
