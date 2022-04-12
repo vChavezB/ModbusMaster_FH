@@ -74,14 +74,14 @@ void setup()
 
 void loop()
 {
-  constexpr uint16_t register_addr = 0x3100
+  constexpr uint16_t register_addr = 0x3100;
   constexpr uint16_t total_registers = 0x16;
   //Read 16 Registers starting from Input register address 0x3100
   const uint8_t modbusOperation_status = node.readInputRegisters(register_addr, total_registers); 
   if (modbusOperation_status == node.ku8MBSuccess) //If modbusOperation_status == 0, got Data succesfully from Modbus Device 
   { 
-    constexpr battery_voltage_offset = 0x04; //register for battery voltage, starting offset of address 0x3100
-    constexpr voltage_load_offset = 0xC0; //register for voltage load, starting offset of address 0x3100
+    constexpr uint8_t battery_voltage_offset = 0x04; //register for battery voltage, starting offset of address 0x3100
+    constexpr uint8_t voltage_load_offset = 0xC0; //register for voltage load, starting offset of address 0x3100
     float batteryVoltage = node.getResponseBuffer(battery_voltage_offset) / 100.0f; //Get data from 
     float VoltageLoad    = node.getResponseBuffer(voltage_load_offset) / 100.0f; //Get data from modbus device from register 0xC0 with starting offset of address 0x3100
     Serial.print("Vbatt: ");
